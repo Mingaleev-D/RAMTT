@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/images111"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.fragment.home.HomeFragment">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_character"
+        style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:backgroundTint="@color/button_background_color"
+        android:text="@string/character"
+        app:icon="@drawable/ic_character"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_location"
+        style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/button_background_color"
+        android:text="@string/locations"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:icon="@drawable/ic_location"
+        app:layout_constraintEnd_toEndOf="@+id/btn_character"
+        app:layout_constraintStart_toStartOf="@+id/btn_character"
+        app:layout_constraintTop_toBottomOf="@+id/btn_character" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_episode"
+        style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/button_background_color"
+        android:text="@string/episode"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:icon="@drawable/ic_episode"
+        app:layout_constraintEnd_toEndOf="@+id/btn_location"
+        app:layout_constraintStart_toStartOf="@+id/btn_location"
+        app:layout_constraintTop_toBottomOf="@+id/btn_location" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
