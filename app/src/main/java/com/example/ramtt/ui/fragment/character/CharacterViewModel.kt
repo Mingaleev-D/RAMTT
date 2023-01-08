@@ -25,6 +25,10 @@ class CharacterViewModel @Inject constructor(
       MutableLiveData()
    var characterResponse:LiveData<NetworkResource<CharacterListResponseDto>> = _characterResponse
 
+   private var _searchCharacterResponse: MutableLiveData<NetworkResource<CharacterListResponseDto>> =
+      MutableLiveData()
+   var searchCharacterResponse:LiveData<NetworkResource<CharacterListResponseDto>> = _searchCharacterResponse
+
 
    fun getCharacter() = viewModelScope.launch {
       _characterResponse.value = NetworkResource.Loading()
@@ -40,6 +44,18 @@ class CharacterViewModel @Inject constructor(
          }
       } else {
          _characterResponse.value = NetworkResource.Error(R.string.no_internet_connected.toString())
+      }
+   }
+
+   fun getSearchCharacter(name: String) = viewModelScope.launch {
+      _searchCharacterResponse.postValue(NetworkResource.Loading())
+      val response = repository.remote.fetchSearchCharacter(name)
+      if (response.isSuccessful) {
+         response.body()?.let { res ->
+            _searchCharacterResponse.postValue(NetworkResource.Success(res))
+         }
+      } else {
+         _searchCharacterResponse.postValue(NetworkResource.Error(message = response.message()))
       }
    }
 

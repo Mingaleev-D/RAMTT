@@ -23,6 +23,10 @@ class LocationViewModel @Inject constructor(
       MutableLiveData()
    var locationResponse: LiveData<NetworkResource<LocationListResponseDto>> = _locationResponse
 
+   private var _searchLocationResponse: MutableLiveData<NetworkResource<LocationListResponseDto>> =
+      MutableLiveData()
+   var searchLocationResponse: LiveData<NetworkResource<LocationListResponseDto>> = _searchLocationResponse
+
    fun getLocation() = viewModelScope.launch {
       _locationResponse.value = NetworkResource.Loading()
 
@@ -37,6 +41,18 @@ class LocationViewModel @Inject constructor(
          }
       } else {
          _locationResponse.value = NetworkResource.Error(R.string.no_internet_connected.toString())
+      }
+   }
+
+   fun getSearchLocation(name: String) = viewModelScope.launch {
+      _searchLocationResponse.postValue(NetworkResource.Loading())
+      val response = repository.remote.fetchSearchLocation(name)
+      if (response.isSuccessful) {
+         response.body()?.let { res ->
+            _searchLocationResponse.postValue(NetworkResource.Success(res))
+         }
+      } else {
+         _searchLocationResponse.postValue(NetworkResource.Error(message = response.message()))
       }
    }
 

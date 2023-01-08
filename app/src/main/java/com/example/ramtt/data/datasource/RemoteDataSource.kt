@@ -27,4 +27,16 @@ class RemoteDataSource @Inject constructor(
    suspend fun fetchEpisode(): Response<EpisodeListResponseDto> {
       return api.fetchEpisode()
    }
+
+   suspend fun fetchSearchCharacter(name:String):Response<CharacterListResponseDto>{
+      return api.fetchSearchCharacters(name)
+   }
+
+   suspend fun fetchSearchLocation(name:String):Response<LocationListResponseDto>{
+      return api.fetchSearchLocations(name)
+   }
+
+   suspend fun fetchSearchEpisode(name:String):Response<EpisodeListResponseDto>{
+      return api.fetchSearchEpisodes(name)
+   }
 }

@@ -1,10 +1,12 @@
 package com.example.ramtt.ui.fragment.character
 
 import android.os.Bundle
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -14,6 +16,9 @@ import com.example.ramtt.common.NetworkResource
 import com.example.ramtt.databinding.FragmentCharacterBinding
 import com.example.ramtt.ui.fragment.character.adapter.CharacterAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -37,6 +42,7 @@ class CharacterFragment : Fragment() {
 
       initRecyclerView()
       viewModelInit()
+      initSearch()
 
    }
 
@@ -57,7 +63,11 @@ class CharacterFragment : Fragment() {
                is NetworkResource.Error   -> {
                   binding.errorImage.visibility = View.VISIBLE
                   binding.errortxt.visibility = View.VISIBLE
-                  Toast.makeText(requireContext(), getString(R.string.no_internet_connected), Toast.LENGTH_SHORT).show()
+                  Toast.makeText(
+                     requireContext(),
+                     getString(R.string.no_internet_connected),
+                     Toast.LENGTH_SHORT
+                  ).show()
                }
             }
          }
@@ -71,6 +81,38 @@ class CharacterFragment : Fragment() {
          setHasFixedSize(true)
          layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+      }
+   }
+
+   private fun initSearch() {
+      var job: Job? = null
+      binding.textInputEt.addTextChangedListener { text: Editable? ->
+         job?.cancel()
+         job = MainScope().launch {
+            delay(500L)
+            text?.let {
+               if (it.toString().isNotEmpty()) {
+                  viewModel.getSearchCharacter(it.toString())
+               }
+            }
+         }
+      }
+      viewModel.searchCharacterResponse.observe(viewLifecycleOwner){searchResponse ->
+         when(searchResponse){
+            is NetworkResource.Loading -> {
+               binding.rcCharacter.showShimmer()
+            }
+            is NetworkResource.Success -> {
+               binding.rcCharacter.hideShimmer()
+               searchResponse.data?.let {
+                  characterAdapter.differ.submitList(it.results)
+               }
+            }
+            is NetworkResource.Error   -> {
+               binding.rcCharacter.hideShimmer()
+               Toast.makeText(requireContext(), "data not found", Toast.LENGTH_SHORT).show()
+            }
+         }
       }
    }
 

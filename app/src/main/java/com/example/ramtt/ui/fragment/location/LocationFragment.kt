@@ -1,10 +1,12 @@
 package com.example.ramtt.ui.fragment.location
 
 import android.os.Bundle
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -15,6 +17,9 @@ import com.example.ramtt.databinding.FragmentLocationBinding
 import com.example.ramtt.ui.fragment.character.adapter.CharacterAdapter
 import com.example.ramtt.ui.fragment.location.adapter.LocationAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -38,6 +43,7 @@ class LocationFragment : Fragment() {
 
       initRecyclerView()
       viewModelInit()
+      initSearchLocation()
 
    }
 
@@ -72,6 +78,38 @@ class LocationFragment : Fragment() {
          setHasFixedSize(true)
          layoutManager =
             LinearLayoutManager(requireContext(), androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+      }
+   }
+
+   private fun initSearchLocation() {
+      var job: Job? = null
+      binding.textInputEtLoca.addTextChangedListener { text: Editable? ->
+         job?.cancel()
+         job = MainScope().launch {
+            delay(500L)
+            text?.let {
+               if (it.toString().isNotEmpty()) {
+                  viewModel.getSearchLocation(it.toString())
+               }
+            }
+         }
+      }
+      viewModel.searchLocationResponse.observe(viewLifecycleOwner){searchResponse ->
+         when(searchResponse){
+            is NetworkResource.Loading -> {
+               binding.rvLocation.showShimmer()
+            }
+            is NetworkResource.Success -> {
+               binding.rvLocation.hideShimmer()
+               searchResponse.data?.let {
+                  locationAdapter.differ.submitList(it.results)
+               }
+            }
+            is NetworkResource.Error   -> {
+               binding.rvLocation.hideShimmer()
+               Toast.makeText(requireContext(), "data not found", Toast.LENGTH_SHORT).show()
+            }
+         }
       }
    }
 

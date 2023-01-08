@@ -25,6 +25,10 @@ class EpisodeViewModel @Inject constructor(
       MutableLiveData()
    var episodeResponse: LiveData<NetworkResource<EpisodeListResponseDto>> = _episodeResponse
 
+   private var _searchEpisodeResponse: MutableLiveData<NetworkResource<EpisodeListResponseDto>> =
+      MutableLiveData()
+   var searchEpisodeResponse: LiveData<NetworkResource<EpisodeListResponseDto>> = _searchEpisodeResponse
+
    fun getLocation() = viewModelScope.launch {
       _episodeResponse.value = NetworkResource.Loading()
 
@@ -39,6 +43,18 @@ class EpisodeViewModel @Inject constructor(
          }
       } else {
          _episodeResponse.value = NetworkResource.Error(R.string.no_internet_connected.toString())
+      }
+   }
+
+   fun getSearchEpisode(name: String) = viewModelScope.launch {
+      _searchEpisodeResponse.postValue(NetworkResource.Loading())
+      val response = repository.remote.fetchSearchEpisode(name)
+      if (response.isSuccessful) {
+         response.body()?.let { res ->
+            _searchEpisodeResponse.postValue(NetworkResource.Success(res))
+         }
+      } else {
+         _searchEpisodeResponse.postValue(NetworkResource.Error(message = response.message()))
       }
    }
 

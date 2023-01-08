@@ -8,6 +8,7 @@ import com.example.ramtt.data.dto.episodemodel.EpisodeListResponseDto
 import com.example.ramtt.data.dto.locationmodel.LocationListResponseDto
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 /**
  * @author : Mingaleev D
@@ -24,4 +25,19 @@ interface ApiService {
 
    @GET(EPISODE)
    suspend fun fetchEpisode():Response<EpisodeListResponseDto>
+
+   @GET(CHARACTER)
+   suspend fun fetchSearchCharacters(
+      @Query("name") name: String
+   ): Response<CharacterListResponseDto>
+
+   @GET(LOCATION)
+   suspend fun fetchSearchLocations(
+      @Query("name") name: String
+   ): Response<LocationListResponseDto>
+
+   @GET(EPISODE)
+   suspend fun fetchSearchEpisodes(
+      @Query("name") name: String
+   ): Response<EpisodeListResponseDto>
 }

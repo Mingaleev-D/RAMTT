@@ -1,10 +1,12 @@
 package com.example.ramtt.ui.fragment.episode
 
 import android.os.Bundle
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -14,6 +16,9 @@ import com.example.ramtt.common.NetworkResource
 import com.example.ramtt.databinding.FragmentEpisodeBinding
 import com.example.ramtt.ui.fragment.episode.adapter.EpisodeAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -37,6 +42,7 @@ class EpisodeFragment : Fragment() {
 
       initRecyclerView()
       viewModelInit()
+      initSearchEpisode()
 
    }
 
@@ -71,6 +77,38 @@ class EpisodeFragment : Fragment() {
          setHasFixedSize(true)
          layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+      }
+   }
+
+   private fun initSearchEpisode() {
+      var job: Job? = null
+      binding.textInputEtEpi.addTextChangedListener { text: Editable? ->
+         job?.cancel()
+         job = MainScope().launch {
+            delay(500L)
+            text?.let {
+               if (it.toString().isNotEmpty()) {
+                  viewModel.getSearchEpisode(it.toString())
+               }
+            }
+         }
+      }
+      viewModel.searchEpisodeResponse.observe(viewLifecycleOwner){searchResponse ->
+         when(searchResponse){
+            is NetworkResource.Loading -> {
+               binding.rvEpisode.showShimmer()
+            }
+            is NetworkResource.Success -> {
+               binding.rvEpisode.hideShimmer()
+               searchResponse.data?.let {
+                  episodeAdapter.differ.submitList(it.results)
+               }
+            }
+            is NetworkResource.Error   -> {
+               binding.rvEpisode.hideShimmer()
+               Toast.makeText(requireContext(), "data not found", Toast.LENGTH_SHORT).show()
+            }
+         }
       }
    }
 
