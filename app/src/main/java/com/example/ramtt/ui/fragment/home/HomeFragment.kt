@@ -29,10 +29,10 @@ class HomeFragment : Fragment() {
          val action = HomeFragmentDirections.actionHomeFragmentToCharacterFragment()
          findNavController().navigate(action)
       }
-//      binding.btnEpisode.setOnClickListener {
-//         val action = HomeFragmentDirections.actionHomeFragmentToEpisodeFragment()
-//         findNavController().navigate(action)
-//      }
+      binding.btnEpisode.setOnClickListener {
+         val action = HomeFragmentDirections.actionHomeFragmentToEpisodeFragment()
+         findNavController().navigate(action)
+      }
       binding.btnLocation.setOnClickListener {
          val action = HomeFragmentDirections.actionHomeFragmentToLocationFragment()
          findNavController().navigate(action)

@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.ramtt.ui.fragment.home.HomeFragment"
-        android:label="fragment_home"
+        android:label="@string/the_rick_and_morty"
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_homeFragment_to_characterFragment"
@@ -16,15 +16,23 @@
         <action
             android:id="@+id/action_homeFragment_to_locationFragment"
             app:destination="@id/locationFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_episodeFragment"
+            app:destination="@id/episodeFragment" />
     </fragment>
     <fragment
         android:id="@+id/characterFragment"
         android:name="com.example.ramtt.ui.fragment.character.CharacterFragment"
-        android:label="fragment_character"
+        android:label="@string/character"
         tools:layout="@layout/fragment_character" />
     <fragment
         android:id="@+id/locationFragment"
         android:name="com.example.ramtt.ui.fragment.location.LocationFragment"
-        android:label="fragment_location"
+        android:label="@string/locations"
         tools:layout="@layout/fragment_location" />
+    <fragment
+        android:id="@+id/episodeFragment"
+        android:name="com.example.ramtt.ui.fragment.episode.EpisodeFragment"
+        android:label="@string/episode"
+        tools:layout="@layout/fragment_episode" />
 </navigation>
