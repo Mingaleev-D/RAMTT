@@ -33,10 +33,10 @@ class HomeFragment : Fragment() {
 //         val action = HomeFragmentDirections.actionHomeFragmentToEpisodeFragment()
 //         findNavController().navigate(action)
 //      }
-//      binding.btnLocation.setOnClickListener {
-//         val action = HomeFragmentDirections.actionHomeFragmentToLocationsFragment()
-//         findNavController().navigate(action)
-//      }
+      binding.btnLocation.setOnClickListener {
+         val action = HomeFragmentDirections.actionHomeFragmentToLocationFragment()
+         findNavController().navigate(action)
+      }
 
    }
 

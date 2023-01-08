@@ -1,4 +1,4 @@
-package com.example.ramtt.ui.fragment.character
+package com.example.ramtt.ui.fragment.location
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,24 +11,25 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ramtt.R
 import com.example.ramtt.common.NetworkResource
-import com.example.ramtt.databinding.FragmentCharacterBinding
+import com.example.ramtt.databinding.FragmentLocationBinding
 import com.example.ramtt.ui.fragment.character.adapter.CharacterAdapter
+import com.example.ramtt.ui.fragment.location.adapter.LocationAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class CharacterFragment : Fragment() {
+class LocationFragment : Fragment() {
 
-   private var _binding: FragmentCharacterBinding? = null
+   private var _binding: FragmentLocationBinding? = null
    private val binding by lazy { _binding!! }
-   private val viewModel by viewModels<CharacterViewModel>()
-   private val characterAdapter = CharacterAdapter()
+   private val viewModel by viewModels<LocationViewModel>()
+   private val locationAdapter = LocationAdapter()
 
    override fun onCreateView(
       inflater: LayoutInflater, container: ViewGroup?,
       savedInstanceState: Bundle?
    ): View {
-      _binding = FragmentCharacterBinding.inflate(inflater, container, false)
+      _binding = FragmentLocationBinding.inflate(inflater, container, false)
       return binding.root
    }
 
@@ -42,16 +43,16 @@ class CharacterFragment : Fragment() {
 
    private fun viewModelInit() {
       lifecycleScope.launch {
-         viewModel.getCharacter()
-         viewModel.characterResponse.observe(viewLifecycleOwner) { response ->
-            when (response) {
+         viewModel.getLocation()
+         viewModel.locationResponse.observe(viewLifecycleOwner){response ->
+            when(response){
                is NetworkResource.Loading -> {
-                  binding.rcCharacter.showShimmer()
+                  binding.rvLocation.showShimmer()
                }
                is NetworkResource.Success -> {
-                  binding.rcCharacter.hideShimmer()
+                  binding.rvLocation.hideShimmer()
                   response.data?.let {
-                     characterAdapter.differ.submitList(it.results)
+                     locationAdapter.differ.submitList(it.results)
                   }
                }
                is NetworkResource.Error   -> {
@@ -65,12 +66,12 @@ class CharacterFragment : Fragment() {
    }
 
    private fun initRecyclerView() {
-      with(binding.rcCharacter) {
-         adapter = characterAdapter
-         overScrollMode = View.OVER_SCROLL_NEVER
+      with(binding.rvLocation) {
+         adapter = locationAdapter
+         overScrollMode = android.view.View.OVER_SCROLL_NEVER
          setHasFixedSize(true)
          layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            LinearLayoutManager(requireContext(), androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
       }
    }
 
@@ -78,4 +79,5 @@ class CharacterFragment : Fragment() {
       super.onDestroyView()
       _binding = null
    }
+
 }

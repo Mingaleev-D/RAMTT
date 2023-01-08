@@ -8,4 +8,5 @@
     <string name="seach_character">Search character</string>
     <string name="data_not_found">Data not found</string>
     <string name="no_internet_connected">No internet connected</string>
+    <string name="seach_location">Search location</string>
 </resources>

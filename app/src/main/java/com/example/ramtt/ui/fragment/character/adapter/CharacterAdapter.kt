@@ -1,4 +1,4 @@
-package com.example.ramtt.ui.fragment.adapter
+package com.example.ramtt.ui.fragment.character.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
